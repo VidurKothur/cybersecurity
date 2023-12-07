@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <style>
+    
+  </style>
+</head>
+
+<body>
+  <h1>Tasks</h1>
+  <form onsubmit = "createTask()">
+    <label>Add Task: </label>
+    <input type = "text" id = "task"><br>
+    <label>Add Due Date: </label>
+    <input type = "date" id = "date"><br>
+    <input type = "submit">
+  </form>
+  <script>
+    function createTask(){
+      const task = document.getElementById("task").value;
+      const date = document.getElementById("date").value;
+
+      const task1 = document.createElement("h3");
+      const text1 = document.createTextNode(task + date.toString());
+      task1.appendChild(text1);
+      document.body.appendChild(task1);
+
+      document.getElementById("task").value = "";
+      document.getElementById("date").value = "";
+    }
+  </script>
+</body>
+
+</html>
