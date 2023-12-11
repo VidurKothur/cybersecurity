@@ -6,32 +6,117 @@
   <meta name="viewport" content="width=device-width">
   <title>replit</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
-  <style>
-    
-  </style>
+  <style></style>
 </head>
 
 <body>
-  <h1>Tasks</h1>
-  <form onsubmit = "createTask()">
-    <label>Add Task: </label>
-    <input type = "text" id = "task"><br>
-    <label>Add Due Date: </label>
-    <input type = "date" id = "date"><br>
+  <h1>Cybersecurity</h1><br>
+  <form onsubmit = "collectTerms(event)">
+    <label for = "term">Term:</label>
+    <input type = "text" id = "term"><br>
+    <label for = "definition">Definition:</label>
+    <input type = "text" id = "definition"><br>
+    <input type = "submit"><br><br>
+  </form>
+  <button onclick = "copyTerms(event)">Copy Terms</button><br>
+  <button onclick = "copyList(event)">Copy List</button><br><br>
+  <button onclick = "startGame(event)" id = "start">Start Game</button><br><br>
+  <p id = "gameDef"></p><br>
+  <form onsubmit = "checkAnswer(event)">
+    <label for = "gameInput">Enter Term:</label>
+    <input type = "text" id = "gameInput"><br>
+    <input type = "submit"><br><br>
+  </form>
+  <p id = "output"></p><br>
+  <p id = "score"></p>
+  <form onsubmit = "interpretList(event)">
+    <label for = "inputList">Input List: </label>
+    <input type = "text" id = "inputList"><br>
     <input type = "submit">
   </form>
   <script>
-    function createTask(){
-      const task = document.getElementById("task").value;
-      const date = document.getElementById("date").value;
-
-      const task1 = document.createElement("h3");
-      const text1 = document.createTextNode(task + date.toString());
-      task1.appendChild(text1);
-      document.body.appendChild(task1);
-
-      document.getElementById("task").value = "";
-      document.getElementById("date").value = "";
+    let terms = [];
+    let definitions = [];
+    let currRand = 0;
+    let score = 0;
+    let total = 0;
+    function collectTerms(event){
+      event.preventDefault();
+      let term = document.getElementById("term").value;
+      let definition = document.getElementById("definition").value;
+      terms.push(term);
+      definitions.push(definition);
+      document.getElementById("term").value = "";
+      document.getElementById("definition").value = "";
+    }
+    function copyTerms(event){
+      event.preventDefault();
+      let text = "";
+      if (terms.length > 0){
+        for (var i = 0; i < terms.length; i++){
+          text = text + terms[i] + ": " + definitions[i] + "\n";
+        }
+        navigator.clipboard.writeText(text);
+        alert("Copied the text");
+      } else {
+        alert("Could not copy, there is no text");
+      }
+    }
+    function copyList(event){
+      event.preventDefault();
+      let text = "";
+      if (terms.length > 0){
+        for (var i = 0; i < terms.length; i++){
+          text = text + terms[i] + "~" + definitions[i] + "`";
+        }
+        navigator.clipboard.writeText(text);
+        alert("Copied the text");
+      } else {
+        alert("Could not copy, there is no text");
+      }
+    }
+    function startGame(event){
+      event.preventDefault();
+      if (terms.length > 0){
+        document.getElementById("start").innerHTML = "Next Question";
+        let rand = Math.floor(Math.random() * terms.length);
+        currRand = rand;
+        let term = terms[rand];
+        let definition = definitions[rand];
+        document.getElementById("gameDef").innerHTML = definition;
+      } else {
+        alert("There are no terms");
+      }
+    }
+    function checkAnswer(event){
+      event.preventDefault();
+      let answer = document.getElementById("gameInput").value;
+      document.getElementById("gameInput").value = "";
+      if (answer.toUpperCase() == terms[currRand].toUpperCase()){
+        document.getElementById("output").innerHTML = "Correct!";
+        score += 1;
+        total += 1;
+        document.getElementById("score").innerHTML = "Score: " + score + "/" + total;
+      } else {
+        document.getElementById("output").innerHTML = "Incorrect! The correct answer was: " + terms[currRand];
+        total += 1;
+        document.getElementById("score").innerHTML = "Score: " + score + "/" + total;
+      }
+    }
+    function interpretList(event){
+      event.preventDefault();
+      let list = document.getElementById("inputList").value;
+      document.getElementById("inputList").value = "";
+      if (list.length > 0){
+        let temp = list.split("`");
+        for (var i = 0; i < temp.length - 1; i++){
+          temp1 = temp[i].split("~");
+          terms.push(temp1[0]);
+          definitions.push(temp1[1]);
+        }
+      } else {
+        alert("List empty")
+      }
     }
   </script>
 </body>
